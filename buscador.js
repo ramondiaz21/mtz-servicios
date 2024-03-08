@@ -212,7 +212,6 @@ function buscarProducto() {
   }
 }
 
-
 function agregarQuitarProducto(nombreServicio) {
   // Buscar el producto correspondiente al nombre del servicio
   let producto = productos.find((p) => p.nombreDelServicio === nombreServicio);
@@ -258,8 +257,9 @@ function actualizarModalBody() {
     productosAgrupados[titulo].forEach((producto) => {
       modalBody.append(`
         <div class="partida-wrapper">
-          <p>${producto.nombreDelServicio}</p>
-          <input type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.identificadorUnico}', this.value)">
+        <input class="form-control" value="${producto.nombreDelServicio}"></input>
+          <!--<p>${producto.nombreDelServicio}</p>-->
+          <input class="form-control" type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.identificadorUnico}', this.value)">
         </div>
       `);
     });
@@ -283,7 +283,7 @@ function actualizarModalBody() {
 
 function actualizarPrecio(identificadorUnico, nuevoPrecio) {
   // Obtener el nombre del servicio y el índice del identificador único
-  let [nombreServicio, index] = identificadorUnico.split('_');
+  let [nombreServicio, index] = identificadorUnico.split("_");
 
   // Actualizar el precio en la lista de productos seleccionados usando el nombre del servicio e índice
   productosSeleccionados = productosSeleccionados.map((producto, i) => {
