@@ -160,6 +160,13 @@ let productos = [
   // ... más productos
 ];
 
+$(document).on("input", ".precio-input", function () {
+  let nuevoPrecio = $(this).val();
+  let titulo = $(this).data("titulo");
+  let indice = $(this).data("indice");
+  actualizarPrecio(titulo, indice, nuevoPrecio);
+});
+
 function buscarProducto() {
   // Obtener el valor del input y convertirlo a minúsculas
   let nombreServicio = document
@@ -205,14 +212,17 @@ function buscarProducto() {
   }
 }
 
+
 function agregarQuitarProducto(nombreServicio) {
   // Buscar el producto correspondiente al nombre del servicio
   let producto = productos.find((p) => p.nombreDelServicio === nombreServicio);
 
   // Verificar si el producto ya está seleccionado
-  if (
-    productosSeleccionados.some((p) => p.nombreDelServicio === nombreServicio)
-  ) {
+  let productoExistente = productosSeleccionados.find(
+    (p) => p.nombreDelServicio === nombreServicio
+  );
+
+  if (productoExistente) {
     // Si está seleccionado, quitarlo
     productosSeleccionados = productosSeleccionados.filter(
       (p) => p.nombreDelServicio !== nombreServicio
@@ -228,26 +238,28 @@ function agregarQuitarProducto(nombreServicio) {
 
 function actualizarModalBody() {
   let modalBody = $("#modalBody");
-  modalBody.html(""); // Usar html('') en lugar de empty()
+  modalBody.html(""); // Limpiar el contenido
 
   // Agrupar productos seleccionados por título
   let productosAgrupados = {};
-  productosSeleccionados.forEach((producto) => {
+  productosSeleccionados.forEach((producto, index) => {
     if (!productosAgrupados[producto.titulo]) {
       productosAgrupados[producto.titulo] = [];
     }
-    productosAgrupados[producto.titulo].push(producto);
+    productosAgrupados[producto.titulo].push({
+      ...producto,
+      identificadorUnico: `${producto.nombreDelServicio}_${index}`,
+    });
   });
 
   // Mostrar productos agrupados en el modal-body
   for (let titulo in productosAgrupados) {
     modalBody.append(`<h5>${titulo}</h5>`);
-    productosAgrupados[titulo].forEach((producto, index) => {
-      // Usar el índice como identificador único
+    productosAgrupados[titulo].forEach((producto) => {
       modalBody.append(`
         <div class="partida-wrapper">
           <p>${producto.nombreDelServicio}</p>
-          <input type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.nombreDelServicio}', ${index}, this.value)">
+          <input type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.identificadorUnico}', this.value)">
         </div>
       `);
     });
@@ -269,11 +281,13 @@ function actualizarModalBody() {
   );
 }
 
+function actualizarPrecio(identificadorUnico, nuevoPrecio) {
+  // Obtener el nombre del servicio y el índice del identificador único
+  let [nombreServicio, index] = identificadorUnico.split('_');
 
-function actualizarPrecio(nombreServicio, index, nuevoPrecio) {
-  // Actualizar el precio en la lista de productos seleccionados usando el índice
+  // Actualizar el precio en la lista de productos seleccionados usando el nombre del servicio e índice
   productosSeleccionados = productosSeleccionados.map((producto, i) => {
-    if (producto.nombreDelServicio === nombreServicio && i === index) {
+    if (producto.nombreDelServicio === nombreServicio && i == index) {
       return { ...producto, precio: parseFloat(nuevoPrecio) || 0 };
     }
     return producto;
