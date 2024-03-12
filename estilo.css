@@ -1,7 +1,7 @@
 body {
   background-color: #0b2545;
-  font-family: "Poppins", sans-serif;
   color: #ebf2fa;
+  font-family: "Poppins", sans-serif;
   padding: 50px 0;
 }
 
@@ -12,9 +12,9 @@ body {
 
 .side {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 25px;
-  flex: 1;
 }
 
 .btn-secondary {
@@ -25,8 +25,8 @@ body {
   background-color: #679436;
   border: 1px solid #679436;
   color: #ebf2fa;
-  transition: 1s all ease;
   margin-top: 25px;
+  transition: 1s all ease;
 }
 
 .modal .btn-primary,
@@ -41,15 +41,15 @@ body {
 }
 
 .form-control {
-  color: #0b2545 !important;
   border: 1px solid #427aa1;
+  color: #0b2545 !important;
 }
 
 .search-wrapper {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
+  display: flex;
   gap: 25px;
+  justify-content: space-between;
 }
 
 /* .info-wrapper,
@@ -58,21 +58,21 @@ body {
 } */
 
 .check-wrapper {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: center;
 }
 
 .result {
-  font-weight: bolder;
-  font-size: 110%;
   color: white;
+  font-size: 110%;
+  font-weight: bolder;
   font-weight: 700;
 }
 
 .check {
-  width: 18px;
   height: 18px;
+  width: 18px;
 }
 
 .modal {
@@ -85,8 +85,8 @@ body {
 }
 
 .partida-wrapper p {
-  margin-bottom: 0;
   flex: 1;
+  margin-bottom: 0;
 }
 
 .partida-wrapper input {
@@ -114,9 +114,11 @@ body {
 }
 
 .buttons-wrapper {
+  align-items: center;
   display: flex;
   flex-direction: row;
   gap: 15px !important;
+  justify-content: center;
 }
 
 p {
@@ -124,12 +126,71 @@ p {
 }
 
 .modal-footer p {
-  font-weight: 500;
   color: #0b2545;
+  font-weight: 500;
 }
 
 .modal-dialog {
   max-width: 800px;
+}
+
+.wrapper-impresion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
+
+.wrapper-impresion .title {
+  font-size: 32px;
+  text-align: center;
+}
+
+.wrapper-impresion .row {
+  width: 100%;
+  font-weight: 500;
+}
+
+.wrapper-impresion .subtitle {
+  font-size: 25px;
+  text-decoration: underline;
+}
+
+.wrapper-impresion .titulo-servicio,
+.wrapper-impresion .texto-servicio,
+.wrapper-impresion .precio {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.wrapper-impresion .texto-servicio {
+  padding-left: 30px;
+}
+
+.wrapper-impresion .elemento-wrapper {
+  display: flex;
+}
+
+.hr-impresion {
+  border-bottom: 1px solid black;
+  opacity: 1;
+  margin: 25px 0;
+}
+
+.iva-wrapper {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.elemento-iva-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 @media (max-width: 767.98px) {

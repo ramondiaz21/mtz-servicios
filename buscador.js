@@ -322,12 +322,111 @@ $("#agregarNuevoServicioBtn").click(function () {
   }
 });
 
+function agruparProductosPorCategoria() {
+  let productosAgrupados = {};
+
+  productosSeleccionados.forEach((producto) => {
+    if (!productosAgrupados[producto.titulo]) {
+      productosAgrupados[producto.titulo] = [];
+    }
+    productosAgrupados[producto.titulo].push({
+      nombreDelServicio: producto.nombreDelServicio,
+      precio: producto.precio,
+    });
+  });
+
+  return productosAgrupados;
+}
+
+
+
 function imprimirCotizacion() {
-  // Aquí puedes implementar la lógica para imprimir la cotización con los productos seleccionados
-  // Puedes acceder a la lista de productos seleccionados usando la variable 'productosSeleccionados'
-  // y realizar las acciones necesarias.
-  console.log(
-    "Imprimir cotización con productos seleccionados:",
-    productosSeleccionados
+  // Crear un nuevo objeto jsPDF con orientación portrait
+  let pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "letter",
+  });
+
+  // Agregar el contenido al PDF
+  agregarContenidoPDF(pdf);
+
+  // Descargar el PDF
+  pdf.save("cotizacion.pdf");
+}
+
+function agregarContenidoPDF(pdf) {
+  // Agregar encabezado
+  agregarEncabezadoPDF(pdf);
+
+  // Agrupar productos por categoría y agregar detalle de productos
+  let productosAgrupados = agruparProductosPorCategoria();
+  agregarDetalleProductosPDF(pdf, productosAgrupados);
+
+  // Agregar totales e información adicional
+  agregarTotalesPDF(pdf);
+}
+
+function agregarEncabezadoPDF(pdf) {
+  pdf.setFontSize(14);
+  pdf.text("MTZ SERVICIOS MAQUINARIA EN GRAL", 105, 15, { align: "center" });
+  pdf.text("MADERO #1020 EL MORALETE COLIMA, COLIMA", 105, 25, {
+    align: "center",
+  });
+  pdf.text("COTIZACION DE SERVICIO", 105, 35, { align: "center" });
+  pdf.text(getFechaActual(), 105, 45, { align: "center" });
+}
+
+function agregarDetalleProductosPDF(pdf, productosAgrupados) {
+  let yPosition = 60;
+
+  for (let categoria in productosAgrupados) {
+    // Encabezado de categoría
+    pdf.setFontSize(12);
+    pdf.text(categoria, 30, yPosition);
+    yPosition += 10;
+
+    // Encabezado de la tabla
+    pdf.setFontSize(12);
+    pdf.text("CONCEPTO", 30, yPosition);
+    pdf.text("PRECIO", 150, yPosition);
+    yPosition += 5;
+
+    // Detalle de productos
+    productosAgrupados[categoria].forEach((producto) => {
+      pdf.text(producto.nombreDelServicio, 30, yPosition);
+      pdf.text(`${producto.precio}`, 150, yPosition);
+      yPosition += 10;
+    });
+
+    yPosition += 10; // Espaciado adicional entre categorías
+  }
+}
+
+function agregarTotalesPDF(pdf) {
+  let totalAntesIva = getTotalAntesIva();
+  let iva = parseFloat($("#iva").val()) || 0;
+  let totalDespuesIva = totalAntesIva * (1 + iva / 100);
+
+  pdf.text(`SUBTOTAL: ${totalAntesIva.toFixed(2)}`, 30, 200);
+  pdf.text(`IVA: ${iva.toFixed(2)}%`, 30, 210);
+  pdf.text(`TOTAL: ${totalDespuesIva.toFixed(2)}`, 30, 220);
+}
+
+function getTotalAntesIva() {
+  return productosSeleccionados.reduce(
+    (total, producto) => total + producto.precio,
+    0
   );
 }
+
+function getFechaActual() {
+  let fechaActual = new Date();
+  return `${fechaActual.getDate()}/${
+    fechaActual.getMonth() + 1
+  }/${fechaActual.getFullYear()}`;
+}
+
+$("#imprimirCotizacionBtn").click(function () {
+  imprimirCotizacion();
+});

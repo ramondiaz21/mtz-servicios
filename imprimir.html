@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link href="estilo.css" media="all" rel="stylesheet" type="text/css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100;9..40,200;9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800;9..40,900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto&display=swap"
+    rel="stylesheet" />
+  <title>Buscador de Productos</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="wrapper-impresion">
+      <h1 class="title">
+        MTZ SERVICIOS MAQUINARIA EN GRAL <br />
+        MADERO #1020 EL MORALETE COLIMA, COLIMA <br />
+        COTIZACION DE SERVICIO <br />
+        <span id="fechaActual"></span>
+      </h1>
+      <div class="table-responsive w-100 mt-5">
+        <table class="w-100">
+          <thead class="text-center">
+            <tr>
+              <th class="subtitle">CONCEPTO</th>
+              <th class="subtitle">PRECIO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="titulo-servicio">Motor</th>
+            </tr>
+            <tr>
+              <td class="texto-servicio">Cambio de banda</td>
+              <td class="text-center precio">100</td>
+            </tr>
+            <tr>
+              <td class="texto-servicio">Revisión y/o cambio de mangueras del agua</td>
+              <td class="text-center precio">100</td>
+            </tr>
+            <tr>
+              <th class="titulo-servicio">Transmisión</th>
+            </tr>
+            <tr>
+              <td class="texto-servicio">Reparación de transmisión</td>
+              <td class="text-center precio">100</td>
+            </tr>
+            <tr>
+              <td class="texto-servicio">Limpieza de cedazo</td>
+              <td class="text-center precio">100</td>
+            </tr>
+             <tr>
+              <th class="titulo-servicio">Frenos</th>
+            </tr>
+            <tr>
+              <td class="texto-servicio">Checar falla en frenos</td>
+              <td class="text-center precio">100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="w-100 hr-impresion" />
+      <div class="iva-wrapper wrapper-impresion">
+        <div class="elemento-iva-wrapper">
+          <p class="texto-servicio">SUBTOTAL</p>
+          <p class="texto-servicio">500</p>
+        </div>
+        <div class="elemento-iva-wrapper">
+          <p class="texto-servicio">IVA</p>
+          <p class="texto-servicio">80</p>
+        </div>
+        <div class="elemento-iva-wrapper">
+          <p class="texto-servicio">TOTAL</p>
+          <p class="texto-servicio">580</p>
+        </div>
+      </div>
+      <div class="mt-5 w-100">
+        <p class="texto-servicio w-100 underline">
+          COTIZACIONES QUE EXCEDAN DE 48 HORAS DE AUTORIZACIÓN PODRÁN CAMBIAR
+          DE PRECIO SOBRE REFACCIONES
+        </p>
+        <p class="texto-servicio mt-2">
+          TELÉFONO DE CONTACTO PARA CUALQUIER ACLARACIÓN O DUDA
+        </p>
+        <p class="texto-servicio text-center mt-2">
+          3121385522 CON ATENCIÓN DE ALAN
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <!-- <script src="html2pdf.bundle.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+  <script src="https://kit.fontawesome.com/a991b50074.js" crossorigin="anonymous"></script>
+  <script src="buscador.js"></script>
+</body>
+
+</html>
