@@ -338,15 +338,9 @@ function agruparProductosPorCategoria() {
   return productosAgrupados;
 }
 
-
-
 function imprimirCotizacion() {
   // Crear un nuevo objeto jsPDF con orientación portrait
-  let pdf = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "letter",
-  });
+  let pdf = new jsPDF();
 
   // Agregar el contenido al PDF
   agregarContenidoPDF(pdf);
@@ -355,62 +349,126 @@ function imprimirCotizacion() {
   pdf.save("cotizacion.pdf");
 }
 
+
+function productosAgrupadosPorCategoria() {
+let productosAgrupados = {};
+
+  productosSeleccionados.forEach((producto) => {
+    if (!productosAgrupados[producto.titulo]) {
+      productosAgrupados[producto.titulo] = [];
+    }
+    productosAgrupados[producto.titulo].push({
+      nombreDelServicio: producto.nombreDelServicio,
+      precio: producto.precio,
+    });
+  });
+
+  return productosAgrupados;
+}
+
+
 function agregarContenidoPDF(pdf) {
   // Agregar encabezado
   agregarEncabezadoPDF(pdf);
 
-  // Agrupar productos por categoría y agregar detalle de productos
-  let productosAgrupados = agruparProductosPorCategoria();
-  agregarDetalleProductosPDF(pdf, productosAgrupados);
+  // Obtener productos agrupados
+  let productosAgrupados = productosAgrupadosPorCategoria();
+
+  // Obtener posición y final de agregarDetalleProductosPDF
+  let yPositionDetalleProductos = agregarDetalleProductosPDF(
+    pdf,
+    productosAgrupados
+  );
 
   // Agregar totales e información adicional
-  agregarTotalesPDF(pdf);
+  agregarTotalesPDF(pdf, yPositionDetalleProductos);
 }
 
 function agregarEncabezadoPDF(pdf) {
   pdf.setFontSize(14);
-  pdf.text("MTZ SERVICIOS MAQUINARIA EN GRAL", 105, 15, { align: "center" });
-  pdf.text("MADERO #1020 EL MORALETE COLIMA, COLIMA", 105, 25, {
+  pdf.text("MTZ SERVICIOS MAQUINARIA EN GRAL", 50, 15, { align: "center" });
+  pdf.text("MADERO #1020 EL MORALETE COLIMA, COLIMA", 50, 25, {
     align: "center",
   });
-  pdf.text("COTIZACION DE SERVICIO", 105, 35, { align: "center" });
-  pdf.text(getFechaActual(), 105, 45, { align: "center" });
+  pdf.text("COTIZACION DE SERVICIO", 50, 35, { align: "center" });
+  pdf.text(getFechaActual(), 50, 45, { align: "center" });
 }
 
 function agregarDetalleProductosPDF(pdf, productosAgrupados) {
   let yPosition = 60;
 
-  for (let categoria in productosAgrupados) {
-    // Encabezado de categoría
-    pdf.setFontSize(12);
-    pdf.text(categoria, 30, yPosition);
-    yPosition += 10;
+  // Encabezado de la tabla
+  pdf.setFontSize(12);
+  pdf.text("CONCEPTO", 30, yPosition);
+  pdf.text("PRECIO", 150, yPosition);
+  yPosition += 10;
 
-    // Encabezado de la tabla
+  for (let categoria in productosAgrupados) {
+    // Fila de categoría
     pdf.setFontSize(12);
-    pdf.text("CONCEPTO", 30, yPosition);
-    pdf.text("PRECIO", 150, yPosition);
-    yPosition += 5;
+    pdf.text(categoria, 30, yPosition, { fontStyle: "bold" });
+    yPosition += 10;
 
     // Detalle de productos
     productosAgrupados[categoria].forEach((producto) => {
-      pdf.text(producto.nombreDelServicio, 30, yPosition);
-      pdf.text(`${producto.precio}`, 150, yPosition);
+      pdf.text(producto.nombreDelServicio, 35, yPosition);
+      pdf.text(`${producto.precio.toFixed(2)}`, 150, yPosition);
       yPosition += 10;
     });
 
     yPosition += 10; // Espaciado adicional entre categorías
   }
+
+  // Devolver la posición y final
+  return yPosition;
 }
 
-function agregarTotalesPDF(pdf) {
+function agregarTotalesPDF(pdf, yPositionDetalleProductos) {
   let totalAntesIva = getTotalAntesIva();
-  let iva = parseFloat($("#iva").val()) || 0;
-  let totalDespuesIva = totalAntesIva * (1 + iva / 100);
+  let iva = 0.16; // 16%
 
-  pdf.text(`SUBTOTAL: ${totalAntesIva.toFixed(2)}`, 30, 200);
-  pdf.text(`IVA: ${iva.toFixed(2)}%`, 30, 210);
-  pdf.text(`TOTAL: ${totalDespuesIva.toFixed(2)}`, 30, 220);
+  // Calcular el monto del IVA en base al subtotal
+  let montoIva = totalAntesIva * iva;
+
+  // Calcular el total después del IVA
+  let totalDespuesIva = totalAntesIva + montoIva;
+
+  // Posición y final de agregarDetalleProductosPDF
+  let yPosition = yPositionDetalleProductos + 20;
+
+  pdf.text(`SUBTOTAL: $${totalAntesIva.toFixed(2)}`, 30, yPosition);
+  pdf.text(`IVA (16%): $${montoIva.toFixed(2)}`, 30, yPosition + 10);
+  pdf.text(`TOTAL: $${totalDespuesIva.toFixed(2)}`, 30, yPosition + 20);
+
+  // Incluir contenido adicional después del IVA con estilos en línea
+  pdf.text(
+    "COTIZACIONES QUE EXCEDAN DE 48 HORAS DE AUTORIZACIÓN",
+    30,
+    yPosition + 40,
+    {
+      fontSize: 16,
+      underline: true,
+    }
+  );
+
+  pdf.text("CAMBIAR DE PRECIO SOBRE REFACCIONES", 30, yPosition + 45, {
+    fontSize: 16,
+    underline: true,
+  });
+
+  pdf.text(
+    "TELÉFONO DE CONTACTO PARA CUALQUIER ACLARACIÓN O DUDA",
+    30,
+    yPosition + 50,
+    {
+      fontSize: 16,
+    }
+  );
+
+  pdf.text("3121385522 CON ATENCIÓN DE ALAN", 30, yPosition + 55, {
+    fontSize: 16,
+    textCenter: true,
+  });
 }
 
 function getTotalAntesIva() {
@@ -430,3 +488,18 @@ function getFechaActual() {
 $("#imprimirCotizacionBtn").click(function () {
   imprimirCotizacion();
 });
+
+function agregarPieDePagina(pdf, texto) {
+  // Configuración de estilo para el pie de página
+  pdf.setTextColor(100);
+  pdf.setFontSize(10);
+
+  // Obtener las dimensiones de la página
+  let pageWidth =
+    pdf.internal.pageSize.width || pdf.internal.pageSize.getWidth();
+  let pageHeight =
+    pdf.internal.pageSize.height || pdf.internal.pageSize.getHeight();
+
+  // Agregar el texto del pie de página centrado en la parte inferior
+  pdf.text(texto, pageWidth / 2, pageHeight - 10, { align: "center" });
+}
