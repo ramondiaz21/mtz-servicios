@@ -349,9 +349,8 @@ function imprimirCotizacion() {
   pdf.save("cotizacion.pdf");
 }
 
-
 function productosAgrupadosPorCategoria() {
-let productosAgrupados = {};
+  let productosAgrupados = {};
 
   productosSeleccionados.forEach((producto) => {
     if (!productosAgrupados[producto.titulo]) {
@@ -365,7 +364,6 @@ let productosAgrupados = {};
 
   return productosAgrupados;
 }
-
 
 function agregarContenidoPDF(pdf) {
   // Agregar encabezado
@@ -396,6 +394,8 @@ function agregarEncabezadoPDF(pdf) {
 
 function agregarDetalleProductosPDF(pdf, productosAgrupados) {
   let yPosition = 60;
+  let pageHeight =
+    pdf.internal.pageSize.height || pdf.internal.pageSize.getHeight();
 
   // Encabezado de la tabla
   pdf.setFontSize(12);
@@ -404,6 +404,13 @@ function agregarDetalleProductosPDF(pdf, productosAgrupados) {
   yPosition += 10;
 
   for (let categoria in productosAgrupados) {
+    // Verificar si hay espacio suficiente para la categoría actual en la página actual
+    if (yPosition + 10 > pageHeight) {
+      // Agregar un salto de página
+      pdf.addPage();
+      yPosition = 20; // Reiniciar la posición en la nueva página
+    }
+
     // Fila de categoría
     pdf.setFontSize(12);
     pdf.text(categoria, 30, yPosition, { fontStyle: "bold" });
@@ -411,6 +418,13 @@ function agregarDetalleProductosPDF(pdf, productosAgrupados) {
 
     // Detalle de productos
     productosAgrupados[categoria].forEach((producto) => {
+      // Verificar si hay espacio suficiente para el producto actual en la página actual
+      if (yPosition + 10 > pageHeight) {
+        // Agregar un salto de página
+        pdf.addPage();
+        yPosition = 20; // Reiniciar la posición en la nueva página
+      }
+
       pdf.text(producto.nombreDelServicio, 35, yPosition);
       pdf.text(`${producto.precio.toFixed(2)}`, 150, yPosition);
       yPosition += 10;
@@ -435,6 +449,15 @@ function agregarTotalesPDF(pdf, yPositionDetalleProductos) {
 
   // Posición y final de agregarDetalleProductosPDF
   let yPosition = yPositionDetalleProductos + 20;
+  let pageHeight =
+    pdf.internal.pageSize.height || pdf.internal.pageSize.getHeight();
+
+  // Verificar si hay suficiente espacio para los totales en la página actual
+  if (yPosition + 30 > pageHeight) {
+    // Agregar un salto de página
+    pdf.addPage();
+    yPosition = 20; // Reiniciar la posición en la nueva página
+  }
 
   pdf.text(`SUBTOTAL: $${totalAntesIva.toFixed(2)}`, 30, yPosition);
   pdf.text(`IVA (16%): $${montoIva.toFixed(2)}`, 30, yPosition + 10);
@@ -470,6 +493,7 @@ function agregarTotalesPDF(pdf, yPositionDetalleProductos) {
     textCenter: true,
   });
 }
+
 
 function getTotalAntesIva() {
   return productosSeleccionados.reduce(
