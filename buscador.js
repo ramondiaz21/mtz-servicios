@@ -345,9 +345,16 @@ function imprimirCotizacion() {
   // Agregar el contenido al PDF
   agregarContenidoPDF(pdf);
 
-  // Descargar el PDF
-  pdf.save("cotizacion.pdf");
+  // Obtener la fecha actual
+  let fechaActual = getFechaActual();
+  
+  // Concatenar la fecha al nombre del archivo
+  let nombreArchivo = `cotizacion_${fechaActual}.pdf`;
+
+  // Descargar el PDF con el nombre concatenado
+  pdf.save(nombreArchivo);
 }
+
 
 function productosAgrupadosPorCategoria() {
   let productosAgrupados = {};
