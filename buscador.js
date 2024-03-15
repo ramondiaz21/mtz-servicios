@@ -253,10 +253,13 @@ function actualizarModalBody() {
 
   // Mostrar productos agrupados en el modal-body
   for (let titulo in productosAgrupados) {
-    modalBody.append(`<h5>${titulo}</h5>`);
+    modalBody.append(`<div class="titulo-modal-wrapper">
+    <h5>${titulo}</h5> <input class="form-control" type="text"> </input>
+    </div>`);
     productosAgrupados[titulo].forEach((producto) => {
       modalBody.append(`
         <div class="partida-wrapper">
+        <input class="form-control input-sm" value="1" type="number"></input>
         <input class="form-control" value="${producto.nombreDelServicio}"></input>
           <!--<p>${producto.nombreDelServicio}</p>-->
           <input class="form-control" type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.identificadorUnico}', this.value)">
@@ -347,14 +350,13 @@ function imprimirCotizacion() {
 
   // Obtener la fecha actual
   let fechaActual = getFechaActual();
-  
+
   // Concatenar la fecha al nombre del archivo
   let nombreArchivo = `cotizacion_${fechaActual}.pdf`;
 
   // Descargar el PDF con el nombre concatenado
   pdf.save(nombreArchivo);
 }
-
 
 function productosAgrupadosPorCategoria() {
   let productosAgrupados = {};
@@ -500,7 +502,6 @@ function agregarTotalesPDF(pdf, yPositionDetalleProductos) {
     textCenter: true,
   });
 }
-
 
 function getTotalAntesIva() {
   return productosSeleccionados.reduce(

@@ -202,3 +202,31 @@ p {
     padding: 30px 0;
   }
 }
+
+.nombreDeCotizacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.nombreDeCotizacion .btn-primary {
+  margin-top: 0;
+}
+
+.titulo-modal-wrapper {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.titulo-modal-wrapper input {
+  width: 100px;
+  max-width: 100%;
+}
+
+.input-sm {
+  width: 15%;
+  flex: none;
+}
