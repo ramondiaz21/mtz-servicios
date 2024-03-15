@@ -1,162 +1,275 @@
 let productosSeleccionados = [];
 let productos = [
-  { titulo: "Motor", nombreDelServicio: "Cambio de banda", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Cambio de termostato", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Cambio de alternador", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Cambio de reten", precio: 0 },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de banda",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de termostato",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de alternador",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de reten",
+    precio: 0,
+    cantidad: 1,
+  },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio de empaque de cabeza",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Motor",
     nombreDelServicio: "Revisar y/o corregir falla",
     precio: 0,
+    cantidad: 1,
   },
-  { titulo: "Motor", nombreDelServicio: "Diagnosticar falla", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Corregir fuga de agua", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Cambio de radiador", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Cambio de poleas", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Cambio bomba de agua", precio: 0 },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Diagnosticar falla",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Corregir fuga de agua",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de radiador",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de poleas",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio bomba de agua",
+    precio: 0,
+    cantidad: 1,
+  },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio y/o reparación de bomba hidráulica",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio de cables y/o bujías",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio de filtro de aire",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio de filtro de gasolina y/o diesel",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio de filtro de aceite",
     precio: 0,
+    cantidad: 1,
   },
-  { titulo: "Motor", nombreDelServicio: "Cambio de aceite motor", precio: 0 },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Cambio de aceite motor",
+    precio: 0,
+    cantidad: 1,
+  },
   {
     titulo: "Motor",
     nombreDelServicio: "Cambio de aceite hidráulico",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Motor",
     nombreDelServicio: "Revisión y/o cambio de mangueras del agua",
     precio: 0,
+    cantidad: 1,
   },
-  { titulo: "Motor", nombreDelServicio: "Sondear radiador", precio: 0 },
-  { titulo: "Motor", nombreDelServicio: "Calibrar motor", precio: 0 },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Sondear radiador",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Motor",
+    nombreDelServicio: "Calibrar motor",
+    precio: 0,
+    cantidad: 1,
+  },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Reparación de transmisión",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Cambio de aceite transmisión",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Limpieza de cedazo",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Cambio de filtro transmisión",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Corregir y/o cambiar mangueras de retorno",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Remover transmisión",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Cambio de electroválvula",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Checar falla y/o corregir",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Cambio de reten salida yugo",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Cambio de reten turbina",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Transmisión",
     nombreDelServicio: "Cambio de turbina",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Frenos",
     nombreDelServicio: "Cambiar bomba de frenos",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Frenos",
     nombreDelServicio: "Corregir fuga de líquido por gomas",
     precio: 0,
+    cantidad: 1,
   },
-  { titulo: "Frenos", nombreDelServicio: "Cambio de balatas", precio: 0 },
-  { titulo: "Frenos", nombreDelServicio: "Cambio de maza", precio: 0 },
-  { titulo: "Frenos", nombreDelServicio: "Cambio de retenes", precio: 0 },
-  { titulo: "Frenos", nombreDelServicio: "Ajustar frenos", precio: 0 },
+  {
+    titulo: "Frenos",
+    nombreDelServicio: "Cambio de balatas",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Frenos",
+    nombreDelServicio: "Cambio de maza",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Frenos",
+    nombreDelServicio: "Cambio de retenes",
+    precio: 0,
+    cantidad: 1,
+  },
+  {
+    titulo: "Frenos",
+    nombreDelServicio: "Ajustar frenos",
+    precio: 0,
+    cantidad: 1,
+  },
   {
     titulo: "Frenos",
     nombreDelServicio: "Checar falla en frenos",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Frenos",
     nombreDelServicio: "Cambio de cilindro de frenos",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Electrico",
     nombreDelServicio: "Checar y/o corregir falla",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Electrico",
     nombreDelServicio: "Cambio de computadora",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Electrico",
     nombreDelServicio: "Checar acumulador y carga",
     precio: 0,
+    cantidad: 1,
   },
   {
     titulo: "Electrico",
     nombreDelServicio: "Cambio de alternador",
     precio: 0,
+    cantidad: 1,
   },
-  { titulo: "Patines", nombreDelServicio: "Reparar bomba", precio: 0 },
+  {
+    titulo: "Patines",
+    nombreDelServicio: "Reparar bomba",
+    precio: 0,
+    cantidad: 1,
+  },
   // ... más productos
 ];
 
@@ -228,7 +341,7 @@ function agregarQuitarProducto(nombreServicio) {
     );
   } else {
     // Si no está seleccionado, agregarlo con un precio predeterminado de 0
-    productosSeleccionados.push({ ...producto, precio: 0 });
+    productosSeleccionados.push({ ...producto, precio: 0, cantidad: 1 });
   }
 
   // Actualizar el contenido del modal-body
@@ -259,7 +372,7 @@ function actualizarModalBody() {
     productosAgrupados[titulo].forEach((producto) => {
       modalBody.append(`
         <div class="partida-wrapper">
-        <input class="form-control input-sm" value="1" type="number"></input>
+        <input class="form-control input-sm" value="${producto.cantidad}" type="number" onchange="actualizarCantidad('${producto.identificadorUnico}', this.value)"></input>
         <input class="form-control" value="${producto.nombreDelServicio}"></input>
           <!--<p>${producto.nombreDelServicio}</p>-->
           <input class="form-control" type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.identificadorUnico}', this.value)">
@@ -300,6 +413,22 @@ function actualizarPrecio(identificadorUnico, nuevoPrecio) {
   actualizarModalBody();
 }
 
+function actualizarCantidad(identificadorUnico, nuevaCantidad) {
+  // Obtener el nombre del servicio y el índice del identificador único
+  let [nombreServicio, index] = identificadorUnico.split("_");
+
+  // Actualizar la cantidad en la lista de productos seleccionados usando el nombre del servicio e índice
+  productosSeleccionados = productosSeleccionados.map((producto, i) => {
+    if (producto.nombreDelServicio === nombreServicio && i == index) {
+      return { ...producto, cantidad: parseInt(nuevaCantidad) || 1 };
+    }
+    return producto;
+  });
+
+  // Actualizar el contenido del modal-body
+  actualizarModalBody();
+}
+
 // Agregar nuevo servicio desde el formulario
 $("#agregarNuevoServicioBtn").click(function () {
   let nuevoServicioTitulo = $("#nuevoServicioTitulo").val();
@@ -310,7 +439,8 @@ $("#agregarNuevoServicioBtn").click(function () {
     let nuevoProducto = {
       titulo: nuevoServicioTitulo,
       nombreDelServicio: nuevoServicioNombre,
-      precio: 0, // Puedes establecer un valor predeterminado o dejarlo en 0
+      precio: 0,
+      cantidad: 1, // Puedes establecer un valor predeterminado o dejarlo en 0
     };
 
     // Agregar el nuevo producto a la lista de productos seleccionados
@@ -335,6 +465,7 @@ function agruparProductosPorCategoria() {
     productosAgrupados[producto.titulo].push({
       nombreDelServicio: producto.nombreDelServicio,
       precio: producto.precio,
+      cantidad: producto.cantidad,
     });
   });
 
@@ -368,6 +499,7 @@ function productosAgrupadosPorCategoria() {
     productosAgrupados[producto.titulo].push({
       nombreDelServicio: producto.nombreDelServicio,
       precio: producto.precio,
+      cantidad: producto.cantidad,
     });
   });
 
@@ -434,8 +566,9 @@ function agregarDetalleProductosPDF(pdf, productosAgrupados) {
         yPosition = 20; // Reiniciar la posición en la nueva página
       }
 
-      pdf.text(producto.nombreDelServicio, 35, yPosition);
+      pdf.text(producto.nombreDelServicio, 55, yPosition);
       pdf.text(`${producto.precio.toFixed(2)}`, 150, yPosition);
+      pdf.text(`${producto.cantidad.toFixed(0)}`, 45, yPosition);
       yPosition += 10;
     });
 
@@ -468,6 +601,7 @@ function agregarTotalesPDF(pdf, yPositionDetalleProductos) {
     yPosition = 20; // Reiniciar la posición en la nueva página
   }
 
+  // Convertir los valores numéricos a cadenas de texto antes de pasarlo a pdf.text()
   pdf.text(`SUBTOTAL: $${totalAntesIva.toFixed(2)}`, 30, yPosition);
   pdf.text(`IVA (16%): $${montoIva.toFixed(2)}`, 30, yPosition + 10);
   pdf.text(`TOTAL: $${totalDespuesIva.toFixed(2)}`, 30, yPosition + 20);

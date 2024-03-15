@@ -228,5 +228,5 @@ p {
 
 .input-sm {
   width: 15%;
-  flex: none;
+  flex: none !important;
 }
