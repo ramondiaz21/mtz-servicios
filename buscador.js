@@ -473,21 +473,96 @@ function agruparProductosPorCategoria() {
 }
 
 function imprimirCotizacion() {
-  // Crear un nuevo objeto jsPDF con orientación portrait
-  let pdf = new jsPDF();
+  // Crear un documento PDFMake
+  let documentDefinition = {
+    content: [
+      { text: "MTZ SERVICIOS MAQUINARIA EN GRAL", style: "header" },
+      { text: "MADERO #1020 EL MORALETE COLIMA, COLIMA", style: "subheader" },
+      { text: "COTIZACION DE SERVICIO", style: "subheader" },
+      { text: getFechaActual(), style: "subheader" },
+      // Agregar el detalle de productos
+      { text: "Detalle de productos", style: "subheader" },
+      // Llamar a una función para generar el detalle de productos
+     { text: 'Detalle de productos', style: 'subheader' },
+    {
+      table: {
+        widths: ['*', 'auto'], // Ancho de las columnas
+        body: [
+          // Encabezado de la tabla
+          [
+            { text: 'CONCEPTO', bold: true },
+            { text: 'PRECIO', bold: true, alignment: 'right' }
+          ],
+          // Detalle de productos
+          ...generarDetalleProductos().map(producto => [
+            { text: producto.concepto },
+            { text: '$' + producto.precio.toFixed(2), alignment: 'right' }
+          ])
+        ]
+      },
+      // Estilos de la tabla
+      layout: {
+        // Funciones para definir los bordes
+        hLineWidth: function(i, node) {
+          return (i === 0 || i === node.table.body.length) ? 1 : 0; // Línea horizontal en el encabezado y el final de la tabla
+        },
+        vLineWidth: function(i, node) {
+          return 0; // Sin líneas verticales
+        },
+        // Espaciado interior de las celdas
+        paddingLeft: function(i, node) { return 5; },
+        paddingRight: function(i, node) { return 5; },
+        paddingTop: function(i, node) { return 5; },
+        paddingBottom: function(i, node) { return 5; }
+      }
+    },
+      // Agregar totales
+      { text: "Total antes de IVA: " + getTotalAntesIva(), style: "total" },
+      { text: "Total después de IVA: " + getTotalDespuesIva(), style: "total" },
+    ],
+    // Definir estilos
+    styles: {
+      header: {
+        fontSize: 14,
+        bold: true,
+        margin: [0, 0, 0, 10],
+        alignment: "center",
+      },
+      subheader: {
+        fontSize: 12,
+        bold: true,
+        margin: [0, 10, 0, 5],
+        alignment: "center",
+      },
+      total: {
+        fontSize: 12,
+        bold: true,
+        margin: [0, 10, 0, 10],
+      },
+      tableHeader: {
+        bold: true,
+        fontSize: 12,
+        color: "black",
+        alignment: "center",
+      },
+    },
+  };
 
-  // Agregar el contenido al PDF
-  agregarContenidoPDF(pdf);
-
-  // Obtener la fecha actual
-  let fechaActual = getFechaActual();
-
-  // Concatenar la fecha al nombre del archivo
-  let nombreArchivo = `cotizacion_${fechaActual}.pdf`;
-
-  // Descargar el PDF con el nombre concatenado
-  pdf.save(nombreArchivo);
+  // Generar el PDF y descargarlo
+  pdfMake.createPdf(documentDefinition).download("cotizacion.pdf");
 }
+
+function generarDetalleProductos() {
+  let detalle = [];
+  productosSeleccionados.forEach((producto) => {
+    detalle.push({
+      concepto: producto.nombreDelServicio,
+      precio: producto.precio,
+    });
+  });
+  return detalle;
+}
+
 
 function productosAgrupadosPorCategoria() {
   let productosAgrupados = {};
@@ -644,11 +719,21 @@ function getTotalAntesIva() {
   );
 }
 
+function getTotalDespuesIva() {
+  let totalAntesIva = getTotalAntesIva();
+  let iva = 0.16; // 16%
+  return (totalAntesIva * (1 + iva)).toFixed(2);
+}
+
 function getFechaActual() {
   let fechaActual = new Date();
-  return `${fechaActual.getDate()}/${
-    fechaActual.getMonth() + 1
-  }/${fechaActual.getFullYear()}`;
+  return (
+    fechaActual.getDate() +
+    "/" +
+    (fechaActual.getMonth() + 1) +
+    "/" +
+    fechaActual.getFullYear()
+  );
 }
 
 $("#imprimirCotizacionBtn").click(function () {
