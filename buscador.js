@@ -484,6 +484,12 @@ function imprimirCotizacion() {
     margin: [0, 0, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
   });
 
+  // Encabezados de la tabla
+  let tablaEncabezados = [
+    { text: "CONCEPTO", bold: true, alignment: "left", margin: [20, 0, 0, 0] },
+    { text: "PRECIO", bold: true, alignment: "right" },
+  ];
+
   // Detalle de productos
   let productosAgrupados = generarDetalleProductos();
   let tablaProductos = [];
@@ -504,11 +510,14 @@ function imprimirCotizacion() {
     });
   }
 
-  // Agregar la tabla al contenido del PDF
+  // Agregar los encabezados y la tabla al contenido del PDF
   pdfContent.push({
     table: {
       widths: ["*", "auto"], // Ancho de las columnas
-      body: tablaProductos, // Cuerpo de la tabla con los datos estructurados
+      body: [
+        tablaEncabezados, // Encabezados de la tabla
+        ...tablaProductos, // Cuerpo de la tabla con los datos estructurados
+      ],
     },
     layout: {
       // Estilos de la tabla
@@ -542,13 +551,13 @@ function imprimirCotizacion() {
 
   pdfContent.push({
     text: [
-      { text: `SUBTOTAL: $${totalAntesIva.toFixed(2)}`, bold: true },
+      { text: `SUBTOTAL: $${totalAntesIva.toFixed(2)}`, bold: true, alignment: "right" },
       "\n",
-      { text: `IVA (16%): $${montoIva.toFixed(2)}`, bold: true },
+      { text: `IVA (16%): $${montoIva.toFixed(2)}`, bold: true, alignment: "right" },
       "\n",
-      { text: `TOTAL: $${totalDespuesIva.toFixed(2)}`, bold: true },
+      { text: `TOTAL: $${totalDespuesIva.toFixed(2)}`, bold: true, alignment: "right" },
     ],
-    margin: [0, 20, 0, 0], // Márgenes (arriba, derecha, abajo, izquierda)
+    margin: [0, 20, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
   });
 
   pdfContent.push({
