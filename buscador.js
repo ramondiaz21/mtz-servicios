@@ -460,6 +460,8 @@ function imprimirCotizacion() {
   // Obtener la fecha actual con el formato DD/MM/YYYY
   let fechaActual = getFechaActual();
 
+  let nombreCotizacion = $("#nombreCotizacion").val();
+
   // Colocar la fecha en la esquina superior derecha
   pdfContent.push({
     text: fechaActual,
@@ -469,7 +471,7 @@ function imprimirCotizacion() {
 
   // Encabezado de la cotización
   pdfContent.push({
-    text: "MTZ SERVICIOS MAQUINARIA EN GRAL\nMADERO #1020 EL MORALETE COLIMA, COLIMA\nCOTIZACION DE SERVICIO",
+    text: `MTZ SERVICIOS MAQUINARIA EN GRAL\nMADERO #1020 EL MORALETE COLIMA, COLIMA\n${nombreCotizacion}`,
     alignment: "center",
     margin: [0, 0, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
   });
