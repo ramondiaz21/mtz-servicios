@@ -361,12 +361,28 @@ function actualizarModalBody() {
     <h5>${titulo}</h5> <input class="form-control" type="text"> </input>
     </div>`);
     productosAgrupados[titulo].forEach((producto) => {
-      totalAntesIva += producto.precio;
+      // Multiplicar cantidad por precio para obtener el precio total del producto
+      let precioTotal = producto.precio * producto.cantidad;
+      totalAntesIva += precioTotal;
       modalBody.append(`
         <div class="partida-wrapper">
-        <input class="form-control input-sm" value="${producto.cantidad}" type="number" onchange="actualizarCantidad('${producto.identificadorUnico}', this.value)"></input>
-        <input class="form-control" value="${producto.nombreDelServicio}"></input>
-          <input class="form-control" type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.nombreDelServicio}', this.value)">
+        <input class="form-control input-sm" value="${
+          producto.cantidad
+        }" type="number" 
+        onchange="actualizarCantidad('${
+          producto.nombreDelServicio
+        }', this.value)"></input>
+        <input class="form-control" value="${
+          producto.nombreDelServicio
+        }"></input>
+          <input class="form-control" type="number" value="${
+            producto.precio
+          }" onchange="actualizarPrecio('${
+        producto.nombreDelServicio
+      }', this.value)">
+          <input class="form-control" type="text" value="${precioTotal.toFixed(
+            2
+          )}" disabled>
         </div>
       `);
     });
@@ -395,21 +411,16 @@ function actualizarPrecio(nombreServicio, nuevoPrecio) {
   }
 }
 
-function actualizarCantidad(identificadorUnico, nuevaCantidad) {
-  // Obtener el nombre del servicio y el índice del identificador único
-  let [nombreServicio, index] = identificadorUnico.split("_");
-
-  // Actualizar la cantidad en la lista de productos seleccionados usando el nombre del servicio e índice
-  productosSeleccionados = productosSeleccionados.map((producto, i) => {
-    if (producto.nombreDelServicio === nombreServicio && i == index) {
-      return { ...producto, cantidad: parseInt(nuevaCantidad) || 1 };
-    }
-    return producto;
-  });
-
-  // Actualizar el contenido del modal-body
-  actualizarModalBody();
+function actualizarCantidad(nombreServicio, nuevoCantidad) {
+  let producto = productosSeleccionados.find(
+    (p) => p.nombreDelServicio === nombreServicio
+  );
+  if (producto) {
+    producto.cantidad = parseFloat(nuevoCantidad) || 0;
+    actualizarModalBody();
+  }
 }
+
 
 // Agregar nuevo servicio desde el formulario
 $("#agregarNuevoServicioBtn").click(function () {
