@@ -507,8 +507,8 @@ function imprimirCotizacion() {
     // Iterar sobre los productos de este título y agregarlos como filas
     productosAgrupados[titulo].forEach((producto) => {
       tablaProductos.push([
-        { text: producto.concepto, margin: [20, 0, 0, 0] }, // Concepto
-        { text: "$" + producto.precio.toFixed(2), alignment: "right" }, // Precio
+        { text: producto.cantidad + "  " + producto.concepto , margin: [20, 0, 0, 0] }, // Concepto
+        { text: "$" + (producto.precio*producto.cantidad).toFixed(2), alignment: "right" }, // Precio
       ]);
     });
   }
@@ -596,7 +596,6 @@ function imprimirCotizacion() {
     .download(`cotizacion_${nombreCotizacion}_${fechaActual}.pdf`);
 }
 
-
 function generarDetalleProductos() {
   let detalleAgrupado = {};
 
@@ -608,6 +607,7 @@ function generarDetalleProductos() {
     detalleAgrupado[producto.titulo].push({
       concepto: producto.nombreDelServicio,
       precio: producto.precio,
+      cantidad: producto.cantidad,
     });
   });
 
