@@ -280,41 +280,50 @@ $(document).on("input", ".precio-input", function () {
   actualizarPrecio(titulo, indice, nuevoPrecio);
 });
 
+$(document).on("change", ".check", function () {
+  let nombreServicio = $(this).data("nombre");
+  if ($(this).is(":checked")) {
+    agregarProducto(nombreServicio);
+  } else {
+    quitarProducto(nombreServicio);
+  }
+});
+
 function buscarProducto() {
-  // Obtener el valor del input y convertirlo a minúsculas
   let nombreServicio = document
     .getElementById("nombreServicio")
     .value.toLowerCase();
-
-  // Mostrar los resultados en pantalla
   let resultadoDiv = document.getElementById("resultadoBusqueda");
 
   if (nombreServicio.trim() === "") {
-    // Si el campo de entrada está vacío, limpiar la pantalla
     resultadoDiv.innerHTML = "";
     return;
   }
 
-  // Realizar la búsqueda
   let resultadosBusqueda = productos.filter((producto) =>
     producto.nombreDelServicio.toLowerCase().includes(nombreServicio)
   );
 
-  // Limpiar resultados anteriores
   resultadoDiv.innerHTML = "";
 
   if (resultadosBusqueda.length > 0) {
     resultadoDiv.innerHTML = "<h5>Resultados encontrados:</h5>";
     resultadosBusqueda.forEach((resultado) => {
+      let checked = productosSeleccionados.some(
+        (p) => p.nombreDelServicio === resultado.nombreDelServicio
+      );
       resultadoDiv.innerHTML += `
           <div class="search-wrapper">
             <div class="info-wrapper">
               <p>Título: ${resultado.titulo}</p>
-              <p>Nombre del Servicio: <span class="result">${resultado.nombreDelServicio}</span></p>
-              
+              <p>Nombre del Servicio: <span class="result">${
+                resultado.nombreDelServicio
+              }</span></p>
             </div>
             <div class="check-wrapper">
-              <input class="check" type="checkbox" onchange="agregarQuitarProducto('${resultado.nombreDelServicio}')">
+              <input class="check" type="checkbox" data-nombre="${
+                resultado.nombreDelServicio
+              }" ${checked ? "checked" : ""}>
             </div>
           </div>
           <hr style="width:100%; margin-left:0">
@@ -325,92 +334,65 @@ function buscarProducto() {
   }
 }
 
-function agregarQuitarProducto(nombreServicio) {
-  // Buscar el producto correspondiente al nombre del servicio
+function agregarProducto(nombreServicio) {
   let producto = productos.find((p) => p.nombreDelServicio === nombreServicio);
-
-  // Verificar si el producto ya está seleccionado
-  let productoExistente = productosSeleccionados.find(
-    (p) => p.nombreDelServicio === nombreServicio
-  );
-
-  if (productoExistente) {
-    // Si está seleccionado, quitarlo
-    productosSeleccionados = productosSeleccionados.filter(
-      (p) => p.nombreDelServicio !== nombreServicio
-    );
-  } else {
-    // Si no está seleccionado, agregarlo con un precio predeterminado de 0
-    productosSeleccionados.push({ ...producto, precio: 0, cantidad: 1 });
+  if (producto && !productosSeleccionados.includes(producto)) {
+    productosSeleccionados.push(producto);
+    actualizarModalBody();
   }
+}
 
-  // Actualizar el contenido del modal-body
+function quitarProducto(nombreServicio) {
+  productosSeleccionados = productosSeleccionados.filter(
+    (p) => p.nombreDelServicio !== nombreServicio
+  );
   actualizarModalBody();
 }
 
 function actualizarModalBody() {
   let modalBody = $("#modalBody");
-  modalBody.html(""); // Limpiar el contenido
+  modalBody.html("");
 
-  // Agrupar productos seleccionados por título
-  let productosAgrupados = {};
-  productosSeleccionados.forEach((producto, index) => {
-    if (!productosAgrupados[producto.titulo]) {
-      productosAgrupados[producto.titulo] = [];
-    }
-    productosAgrupados[producto.titulo].push({
-      ...producto,
-      identificadorUnico: `${producto.nombreDelServicio}_${index}`,
-    });
-  });
+  let productosAgrupados = agruparProductosPorCategoria();
+  let totalAntesIva = 0;
 
-  // Mostrar productos agrupados en el modal-body
   for (let titulo in productosAgrupados) {
     modalBody.append(`<div class="titulo-modal-wrapper">
     <h5>${titulo}</h5> <input class="form-control" type="text"> </input>
     </div>`);
     productosAgrupados[titulo].forEach((producto) => {
+      totalAntesIva += producto.precio;
       modalBody.append(`
         <div class="partida-wrapper">
         <input class="form-control input-sm" value="${producto.cantidad}" type="number" onchange="actualizarCantidad('${producto.identificadorUnico}', this.value)"></input>
         <input class="form-control" value="${producto.nombreDelServicio}"></input>
-          <!--<p>${producto.nombreDelServicio}</p>-->
-          <input class="form-control" type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.identificadorUnico}', this.value)">
+          <input class="form-control" type="number" value="${producto.precio}" onchange="actualizarPrecio('${producto.nombreDelServicio}', this.value)">
         </div>
       `);
     });
     modalBody.append("<hr>");
   }
 
-  // Calcular y mostrar la sumatoria antes y después del IVA
-  let totalAntesIva = productosSeleccionados.reduce(
-    (total, producto) => total + producto.precio,
-    0
-  );
+  // Actualizar el contenido en el modal-footer con el nuevo total antes del IVA y el total después del IVA
   let iva = parseFloat($("#iva").val()) || 0;
-  let totalDespuesIva = totalAntesIva * (1 + iva / 100);
+  let montoIva = totalAntesIva * (iva / 100);
+  let totalDespuesIva = totalAntesIva + montoIva;
 
-  // Actualizar el contenido en el modal-footer
   $("#totalAntesIva").text(`Total antes de IVA: $${totalAntesIva.toFixed(2)}`);
   $("#totalDespuesIva").text(
     `Total después de IVA: $${totalDespuesIva.toFixed(2)}`
   );
 }
 
-function actualizarPrecio(identificadorUnico, nuevoPrecio) {
-  // Obtener el nombre del servicio y el índice del identificador único
-  let [nombreServicio, index] = identificadorUnico.split("_");
 
-  // Actualizar el precio en la lista de productos seleccionados usando el nombre del servicio e índice
-  productosSeleccionados = productosSeleccionados.map((producto, i) => {
-    if (producto.nombreDelServicio === nombreServicio && i == index) {
-      return { ...producto, precio: parseFloat(nuevoPrecio) || 0 };
-    }
-    return producto;
-  });
-
-  // Actualizar el contenido del modal-body
-  actualizarModalBody();
+function actualizarPrecio(nombreServicio, nuevoPrecio) {
+  let producto = productosSeleccionados.find(
+    (p) => p.nombreDelServicio === nombreServicio
+  );
+  if (producto) {
+    producto.precio = parseFloat(nuevoPrecio) || 0;
+    actualizarModalBody();
+  }
 }
 
 function actualizarCantidad(identificadorUnico, nuevaCantidad) {
