@@ -475,11 +475,19 @@ function agruparProductosPorCategoria() {
 function imprimirCotizacion() {
   let pdfContent = [];
 
+  // Obtener la fecha actual con el formato DD/MM/YYYY
+  let fechaActual = getFechaActual();
+
+  // Colocar la fecha en la esquina superior derecha
+  pdfContent.push({
+    text: fechaActual,
+    alignment: "right",
+    margin: [0, 10, 20, 0], // Márgenes (arriba, derecha, abajo, izquierda)
+  });
+
   // Encabezado de la cotización
   pdfContent.push({
-    text:
-      "MTZ SERVICIOS MAQUINARIA EN GRAL\nMADERO #1020 EL MORALETE COLIMA, COLIMA\nCOTIZACION DE SERVICIO\n" +
-      getFechaActual(),
+    text: "MTZ SERVICIOS MAQUINARIA EN GRAL\nMADERO #1020 EL MORALETE COLIMA, COLIMA\nCOTIZACION DE SERVICIO",
     alignment: "center",
     margin: [0, 0, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
   });
@@ -551,11 +559,23 @@ function imprimirCotizacion() {
 
   pdfContent.push({
     text: [
-      { text: `SUBTOTAL: $${totalAntesIva.toFixed(2)}`, bold: true, alignment: "right" },
+      {
+        text: `SUBTOTAL: $${totalAntesIva.toFixed(2)}`,
+        bold: true,
+        alignment: "right",
+      },
       "\n",
-      { text: `IVA (16%): $${montoIva.toFixed(2)}`, bold: true, alignment: "right" },
+      {
+        text: `IVA (16%): $${montoIva.toFixed(2)}`,
+        bold: true,
+        alignment: "right",
+      },
       "\n",
-      { text: `TOTAL: $${totalDespuesIva.toFixed(2)}`, bold: true, alignment: "right" },
+      {
+        text: `TOTAL: $${totalDespuesIva.toFixed(2)}`,
+        bold: true,
+        alignment: "right",
+      },
     ],
     margin: [0, 20, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
   });
