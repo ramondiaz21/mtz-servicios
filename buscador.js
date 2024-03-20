@@ -580,7 +580,9 @@ function imprimirCotizacion() {
   };
 
   // Generar el archivo PDF y descargarlo
-  pdfMake.createPdf(pdfDoc).download("cotizacion.pdf");
+  pdfMake
+    .createPdf(pdfDoc)
+    .download(`cotizacion_${nombreCotizacion}_${fechaActual}.pdf`);
 }
 
 
