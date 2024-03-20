@@ -358,7 +358,7 @@ function actualizarModalBody() {
 
   for (let titulo in productosAgrupados) {
     modalBody.append(`<div class="titulo-modal-wrapper">
-    <h5>${titulo}</h5> <input class="form-control" type="text"> </input>
+      <h5>${titulo}</h5> <input class="form-control numeroTitulo" type="text" data-titulo="${titulo}" placeholder="Número de título"> </input>
     </div>`);
     productosAgrupados[titulo].forEach((producto) => {
       // Multiplicar cantidad por precio para obtener el precio total del producto
@@ -366,23 +366,25 @@ function actualizarModalBody() {
       totalAntesIva += precioTotal;
       modalBody.append(`
         <div class="partida-wrapper">
-        <input class="form-control input-sm" value="${
-          producto.cantidad
-        }" type="number" 
-        onchange="actualizarCantidad('${
-          producto.nombreDelServicio
-        }', this.value)"></input>
-        <input class="form-control" value="${
-          producto.nombreDelServicio
-        }"></input>
-          <input class="form-control" type="number" value="${
-            producto.precio
-          }" onchange="actualizarPrecio('${
-        producto.nombreDelServicio
-      }', this.value)">
+          <input class="form-control input-sm" value="${
+            producto.cantidad
+          }" type="number" 
+            onchange="actualizarCantidad('${
+              producto.nombreDelServicio
+            }', this.value)">
+          </input>
+          <input class="form-control" value="${
+            producto.nombreDelServicio
+          }" disabled>
+          <input class="form-control" type="number" value="${producto.precio}" 
+            onchange="actualizarPrecio('${
+              producto.nombreDelServicio
+            }', this.value)">
+          </input>
           <input class="form-control" type="text" value="${precioTotal.toFixed(
             2
           )}" disabled>
+          </input>
         </div>
       `);
     });
@@ -466,47 +468,44 @@ function agruparProductosPorCategoria() {
 
 function imprimirCotizacion() {
   let pdfContent = [];
-
-  // Obtener la fecha actual con el formato DD/MM/YYYY
   let fechaActual = getFechaActual();
-
   let nombreCotizacion = $("#nombreCotizacion").val();
 
-  // Colocar la fecha en la esquina superior derecha
   pdfContent.push({
     text: fechaActual,
     alignment: "right",
-    margin: [0, 10, 20, 0], // Márgenes (arriba, derecha, abajo, izquierda)
+    margin: [0, 10, 20, 0],
   });
 
-  // Encabezado de la cotización
   pdfContent.push({
     text: `MTZ SERVICIOS MAQUINARIA EN GRAL\nMADERO #1020 EL MORALETE COLIMA, COLIMA\n${nombreCotizacion}`,
     alignment: "center",
-    margin: [0, 0, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
+    margin: [0, 0, 0, 20],
   });
 
-  // Encabezados de la tabla
   let tablaEncabezados = [
     { text: "CONCEPTO", bold: true, alignment: "left", margin: [20, 0, 0, 0] },
     { text: "PRECIO", bold: true, alignment: "right" },
   ];
 
-  // Detalle de productos
   let productosAgrupados = generarDetalleProductos();
   let tablaProductos = [];
 
   let totalAntesIva = 0;
 
   for (let titulo in productosAgrupados) {
-    // Agregar el título como una fila en la tabla
+    let numeroTitulo = productosAgrupados[titulo].numeroTitulo;
     tablaProductos.push([
-      { text: titulo, style: "subheader", colSpan: 2, alignment: "left" },
+      {
+        text: titulo + " " + numeroTitulo,
+        style: "subheader",
+        colSpan: 2,
+        alignment: "left",
+      },
       {},
     ]);
 
-    // Iterar sobre los productos de este título y agregarlos como filas
-    productosAgrupados[titulo].forEach((producto) => {
+    productosAgrupados[titulo].productos.forEach((producto) => {
       let precioTotal = producto.precioTotal;
       totalAntesIva += precioTotal;
 
@@ -514,30 +513,24 @@ function imprimirCotizacion() {
         {
           text: producto.cantidad + "  " + producto.concepto,
           margin: [20, 0, 0, 0],
-        }, // Concepto
-        { text: "$" + precioTotal.toFixed(2), alignment: "right" }, // Precio
+        },
+        { text: "$" + precioTotal.toFixed(2), alignment: "right" },
       ]);
     });
   }
 
-  // Agregar los encabezados y la tabla al contenido del PDF
   pdfContent.push({
     table: {
-      widths: ["*", "auto"], // Ancho de las columnas
-      body: [
-        tablaEncabezados, // Encabezados de la tabla
-        ...tablaProductos, // Cuerpo de la tabla con los datos estructurados
-      ],
+      widths: ["*", "auto"],
+      body: [tablaEncabezados, ...tablaProductos],
     },
     layout: {
-      // Estilos de la tabla
       hLineWidth: function (i, node) {
-        return i === 0 || i === node.table.body.length ? 1 : 0; // Línea horizontal en el encabezado y el final de la tabla
+        return i === 0 || i === node.table.body.length ? 1 : 0;
       },
       vLineWidth: function (i, node) {
-        return 0; // Sin líneas verticales
+        return 0;
       },
-      // Espaciado interior de las celdas
       paddingLeft: function (i, node) {
         return 5;
       },
@@ -553,12 +546,10 @@ function imprimirCotizacion() {
     },
   });
 
-  // Calcular IVA y Total
-  let iva = 0.16; // 16%
+  let iva = 0.16;
   let montoIva = totalAntesIva * iva;
   let totalDespuesIva = totalAntesIva + montoIva;
 
-  // Totales e información adicional
   pdfContent.push({
     text: [
       {
@@ -579,7 +570,7 @@ function imprimirCotizacion() {
         alignment: "right",
       },
     ],
-    margin: [0, 20, 0, 20], // Márgenes (arriba, derecha, abajo, izquierda)
+    margin: [0, 20, 0, 20],
   });
 
   pdfContent.push({
@@ -592,27 +583,33 @@ function imprimirCotizacion() {
     alignment: "center",
   });
 
-  // Crear el documento PDF
   let pdfDoc = {
     content: pdfContent,
   };
 
-  // Generar el archivo PDF y descargarlo
   pdfMake
     .createPdf(pdfDoc)
     .download(`cotizacion_${nombreCotizacion}_${fechaActual}.pdf`);
 }
 
 
+
 function generarDetalleProductos() {
   let detalleAgrupado = {};
 
+  // Obtener los números de título para cada categoría
+  $(".numeroTitulo").each(function () {
+    let titulo = $(this).data("titulo");
+    let numeroTitulo = $(this).val();
+    detalleAgrupado[titulo] = {
+      numeroTitulo: numeroTitulo,
+      productos: [],
+    };
+  });
+
   // Agrupar los productos por título
   productosSeleccionados.forEach((producto) => {
-    if (!detalleAgrupado[producto.titulo]) {
-      detalleAgrupado[producto.titulo] = [];
-    }
-    detalleAgrupado[producto.titulo].push({
+    detalleAgrupado[producto.titulo].productos.push({
       concepto: producto.nombreDelServicio,
       precio: producto.precio,
       cantidad: producto.cantidad,
@@ -621,14 +618,13 @@ function generarDetalleProductos() {
 
   // Calcular el precio total de cada producto
   for (let titulo in detalleAgrupado) {
-    detalleAgrupado[titulo].forEach((producto) => {
+    detalleAgrupado[titulo].productos.forEach((producto) => {
       producto.precioTotal = producto.precio * producto.cantidad;
     });
   }
 
   return detalleAgrupado;
 }
-
 
 function getFechaActual() {
   let fechaActual = new Date();
