@@ -400,7 +400,6 @@ function actualizarModalBody() {
   );
 }
 
-
 function actualizarPrecio(nombreServicio, nuevoPrecio) {
   let producto = productosSeleccionados.find(
     (p) => p.nombreDelServicio === nombreServicio
@@ -497,6 +496,8 @@ function imprimirCotizacion() {
   let productosAgrupados = generarDetalleProductos();
   let tablaProductos = [];
 
+  let totalAntesIva = 0;
+
   for (let titulo in productosAgrupados) {
     // Agregar el título como una fila en la tabla
     tablaProductos.push([
@@ -506,9 +507,15 @@ function imprimirCotizacion() {
 
     // Iterar sobre los productos de este título y agregarlos como filas
     productosAgrupados[titulo].forEach((producto) => {
+      let precioTotal = producto.precioTotal;
+      totalAntesIva += precioTotal;
+
       tablaProductos.push([
-        { text: producto.cantidad + "  " + producto.concepto , margin: [20, 0, 0, 0] }, // Concepto
-        { text: "$" + (producto.precio*producto.cantidad).toFixed(2), alignment: "right" }, // Precio
+        {
+          text: producto.cantidad + "  " + producto.concepto,
+          margin: [20, 0, 0, 0],
+        }, // Concepto
+        { text: "$" + precioTotal.toFixed(2), alignment: "right" }, // Precio
       ]);
     });
   }
@@ -546,12 +553,12 @@ function imprimirCotizacion() {
     },
   });
 
-  // Totales e información adicional
-  let totalAntesIva = getTotalAntesIva();
+  // Calcular IVA y Total
   let iva = 0.16; // 16%
   let montoIva = totalAntesIva * iva;
   let totalDespuesIva = totalAntesIva + montoIva;
 
+  // Totales e información adicional
   pdfContent.push({
     text: [
       {
@@ -596,6 +603,7 @@ function imprimirCotizacion() {
     .download(`cotizacion_${nombreCotizacion}_${fechaActual}.pdf`);
 }
 
+
 function generarDetalleProductos() {
   let detalleAgrupado = {};
 
@@ -611,38 +619,16 @@ function generarDetalleProductos() {
     });
   });
 
+  // Calcular el precio total de cada producto
+  for (let titulo in detalleAgrupado) {
+    detalleAgrupado[titulo].forEach((producto) => {
+      producto.precioTotal = producto.precio * producto.cantidad;
+    });
+  }
+
   return detalleAgrupado;
 }
 
-function productosAgrupadosPorCategoria() {
-  let productosAgrupados = {};
-
-  productosSeleccionados.forEach((producto) => {
-    if (!productosAgrupados[producto.titulo]) {
-      productosAgrupados[producto.titulo] = [];
-    }
-    productosAgrupados[producto.titulo].push({
-      nombreDelServicio: producto.nombreDelServicio,
-      precio: producto.precio,
-      cantidad: producto.cantidad,
-    });
-  });
-
-  return productosAgrupados;
-}
-
-function getTotalAntesIva() {
-  return productosSeleccionados.reduce(
-    (total, producto) => total + producto.precio,
-    0
-  );
-}
-
-function getTotalDespuesIva() {
-  let totalAntesIva = getTotalAntesIva();
-  let iva = 0.16; // 16%
-  return (totalAntesIva * (1 + iva)).toFixed(2);
-}
 
 function getFechaActual() {
   let fechaActual = new Date();
