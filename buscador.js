@@ -629,14 +629,21 @@ function getTotalDespuesIva() {
 
 function getFechaActual() {
   let fechaActual = new Date();
-  return (
-    fechaActual.getDate() +
-    "/" +
-    (fechaActual.getMonth() + 1) +
-    "/" +
-    fechaActual.getFullYear()
-  );
+  let dia = fechaActual.getDate();
+  let mes = fechaActual.getMonth() + 1;
+  let anio = fechaActual.getFullYear();
+
+  // Ajuste para que tenga siempre dos dígitos
+  if (dia < 10) {
+    dia = "0" + dia;
+  }
+  if (mes < 10) {
+    mes = "0" + mes;
+  }
+
+  return dia + "/" + mes + "/" + anio;
 }
+
 
 $("#imprimirCotizacionBtn").click(function () {
   imprimirCotizacion();
