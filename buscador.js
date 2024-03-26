@@ -351,6 +351,15 @@ function quitarProducto(nombreServicio) {
 
 function actualizarModalBody() {
   let modalBody = $("#modalBody");
+  let numeroTituloValues = {}; // Objeto para almacenar los valores de numeroTitulo
+
+  // Almacenar los valores actuales de numeroTitulo
+  $(".numeroTitulo").each(function () {
+    let titulo = $(this).data("titulo");
+    let numeroTitulo = $(this).val();
+    numeroTituloValues[titulo] = numeroTitulo;
+  });
+
   modalBody.html("");
 
   let productosAgrupados = agruparProductosPorCategoria();
@@ -360,6 +369,10 @@ function actualizarModalBody() {
     modalBody.append(`<div class="titulo-modal-wrapper">
       <h5>${titulo}</h5> <input class="form-control numeroTitulo" type="text" data-titulo="${titulo}" placeholder="Número de título"> </input>
     </div>`);
+
+    // Restaurar los valores de numeroTitulo
+    $(`.numeroTitulo[data-titulo="${titulo}"]`).val(numeroTituloValues[titulo]);
+
     productosAgrupados[titulo].forEach((producto) => {
       // Multiplicar cantidad por precio para obtener el precio total del producto
       let precioTotal = producto.precio * producto.cantidad;
@@ -369,17 +382,11 @@ function actualizarModalBody() {
           <input class="form-control input-sm" value="${
             producto.cantidad
           }" type="number" 
-            onchange="actualizarCantidad('${
-              producto.nombreDelServicio
-            }', this.value)">
+            onchange="actualizarCantidad('${producto.nombreDelServicio}', this.value)">
           </input>
-          <input class="form-control" value="${
-            producto.nombreDelServicio
-          }" disabled>
+          <input class="form-control" value="${producto.nombreDelServicio}" disabled>
           <input class="form-control" type="number" value="${producto.precio}" 
-            onchange="actualizarPrecio('${
-              producto.nombreDelServicio
-            }', this.value)">
+            onchange="actualizarPrecio('${producto.nombreDelServicio}', this.value)">
           </input>
           <input class="form-control" type="text" value="${precioTotal.toFixed(
             2
